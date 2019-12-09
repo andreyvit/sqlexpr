@@ -130,14 +130,17 @@ DELETE FROM accounts WHERE id = $1
 5. These four structs define a few simple helper methods, e.g. `AddWhere` appends the given condition to `.Where` slice. The helpers both simplify your code and allow code reuse via interfaces:
 
     ```go
+    // Settable represents INSERTs and UPDATEs
     type Settable interface {
         Set(field Expr, value interface{})
     }
+    // Whereable represents SELECTs, UPDATEs and DELETEs
     type Whereable interface {
         AddWhere(conds ...Expr)
     }
-    type Returnable interface {
-        AddReturning(fields ...Expr)
+    // Fieldable represents SELECTs (SELECT field list) and INSERTs/UPDATEs/DELETEs (RETURNING clause)
+    type Fieldable interface {
+        AddField(fields ...Expr)
     }
     ```
 

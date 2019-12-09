@@ -50,7 +50,7 @@ func ExampleInsert() {
 	s.Set(name, "John Doe")
 	s.Set(notes, "Little Johny")
 	s.Set(updated_at, sqlexpr.NOW)
-	s.AddReturning(id)
+	s.AddField(id)
 
 	sql, args := sqlexpr.Build(s)
 	fmt.Println(sql)
@@ -77,7 +77,7 @@ func ExampleUpdate() {
 	s.Set(notes, "Little Johny")
 	s.Set(updated_at, sqlexpr.NOW)
 	s.AddWhere(sqlexpr.Eq(id, 42))
-	s.AddReturning(updated_at)
+	s.AddField(updated_at)
 
 	sql, args := sqlexpr.Build(s)
 	fmt.Println(sql)

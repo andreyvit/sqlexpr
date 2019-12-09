@@ -60,14 +60,19 @@ func InnerJoin(a Expr, aCol Column, b Expr, bCol Column) Expr {
 	return Fragment{a, Raw("INNER JOIN"), b, Raw("ON"), Dot(a, aCol), Raw("="), Dot(b, bCol)}
 }
 
+// Settable represents INSERTs and UPDATEs
 type Settable interface {
 	Set(field Expr, value interface{})
 }
+
+// Whereable represents SELECTs, UPDATEs and DELETEs
 type Whereable interface {
 	AddWhere(conds ...Expr)
 }
-type Returnable interface {
-	AddReturning(fields ...Expr)
+
+// Fieldable represents SELECTs (SELECT field list) and INSERTs/UPDATEs/DELETEs (RETURNING clause)
+type Fieldable interface {
+	AddField(fields ...Expr)
 }
 
 type Select struct {
@@ -114,7 +119,7 @@ func (s *Insert) Set(field Expr, value interface{}) {
 	s.Setters = append(s.Setters, Setter{field, value})
 }
 
-func (s *Insert) AddReturning(fields ...Expr) {
+func (s *Insert) AddField(fields ...Expr) {
 	s.Returning = append(s.Returning, fields...)
 }
 
@@ -160,7 +165,7 @@ func (s *Update) AddWhere(conds ...Expr) {
 	s.Where = append(s.Where, conds...)
 }
 
-func (s *Update) AddReturning(fields ...Expr) {
+func (s *Update) AddField(fields ...Expr) {
 	s.Returning = append(s.Returning, fields...)
 }
 
@@ -194,7 +199,7 @@ func (s *Delete) AddWhere(conds ...Expr) {
 	s.Where = append(s.Where, conds...)
 }
 
-func (s *Delete) AddReturning(fields ...Expr) {
+func (s *Delete) AddField(fields ...Expr) {
 	s.Returning = append(s.Returning, fields...)
 }
 
