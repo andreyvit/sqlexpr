@@ -1,5 +1,6 @@
 # Idiomatic, simple and powerful SQL Builder for Go
 
+[![GoDoc](https://godoc.org/github.com/andreyvit/sqlexpr?status.svg)](https://godoc.org/github.com/andreyvit/sqlexpr)
 
 Three goals:
 
@@ -19,7 +20,10 @@ Features:
 3. Allows to pick SQL dialect (this is a global setting, because working with multiple different database types in a single app is extremely rate and is not worth polluting the entire code with dialect selection).
 
 
+
 ## Usage
+
+See [GoDoc](https://godoc.org/github.com/andreyvit/sqlexpr) for more details.
 
 Import:
 
