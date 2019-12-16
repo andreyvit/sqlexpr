@@ -167,3 +167,40 @@ func Desc(v Expr) Expr {
 func Dot(a, b Expr) Expr {
 	return Fragment{a, Raw("."), b}
 }
+
+type funcExpr struct {
+	name string
+	args []interface{}
+}
+
+func Func(name string, args ...interface{}) Expr {
+	return &funcExpr{name, args}
+}
+
+func (v funcExpr) AppendToSQLBuilder(b *Builder) {
+	b.AppendRaw(v.name)
+	b.AppendRaw("(")
+	for i, arg := range v.args {
+		if i > 0 {
+			b.AppendRaw(",")
+		}
+		b.Append(arg)
+	}
+	b.AppendRaw(")")
+}
+
+func Max(v Expr) Expr {
+	return Func("MAX", v)
+}
+
+func Min(v Expr) Expr {
+	return Func("MIN", v)
+}
+
+func Count(v Expr) Expr {
+	return Func("COUNT", v)
+}
+
+func As(v Expr, name Column) Expr {
+	return Fragment{v, Raw("AS"), name}
+}

@@ -38,6 +38,15 @@ func TestExprs(t *testing.T) {
 		{"Not", Not(Column("foo")), "NOT foo"},
 
 		{"Dot", Dot(Table("foo"), Column("bar")), "foo.bar"},
+
+		{"Func0", Func("foo"), "foo ()"},
+		{"Func1", Func("foo", Column("boz")), "foo (boz)"},
+		{"Func2", Func("foo", "bar", Column("boz")), "foo ($1, boz) [bar]"},
+		{"Max", Max(Column("boz")), "MAX (boz)"},
+		{"Min", Min(Column("boz")), "MIN (boz)"},
+		{"Count", Count(Column("boz")), "COUNT (boz)"},
+
+		{"As", As(Column("foo"), "bar"), "foo AS bar"},
 	}
 
 	for _, test := range tests {
