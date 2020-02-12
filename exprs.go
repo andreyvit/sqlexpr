@@ -65,7 +65,19 @@ func (v List) AppendToSQLBuilder(b *Builder) {
 	}
 }
 
+type arrayLike interface {
+	Count() int
+	At(i int) interface{}
+}
+
 type Array []interface{}
+
+func (v Array) Count() int {
+	return len(v)
+}
+func (v Array) At(i int) interface{} {
+	return v[i]
+}
 
 func (v Array) AppendToSQLBuilder(b *Builder) {
 	b.AppendRaw("(")
@@ -102,14 +114,16 @@ func ArrayOfStrings(items []string) Array {
 	return arr
 }
 
-func In(lhs interface{}, items Array) Expr {
-	if len(items) == 0 {
-		return FALSE
-	} else if len(items) == 1 {
-		return Eq(lhs, items[0])
-	} else {
-		return Fragment{lhs, Raw("IN"), items}
+func In(lhs interface{}, items Expr) Expr {
+	if a, ok := items.(arrayLike); ok {
+		switch a.Count() {
+		case 0:
+			return FALSE
+		case 1:
+			return Eq(lhs, a.At(0))
+		}
 	}
+	return Fragment{lhs, Raw("IN"), items}
 }
 
 type And []interface{}
