@@ -218,3 +218,20 @@ func (v parenthesized) AppendToSQLBuilder(b *Builder) {
 	v.v.AppendToSQLBuilder(b)
 	b.AppendRaw(")")
 }
+
+func Qualified(exprs ...Expr) Expr {
+	return qualified{exprs}
+}
+
+type qualified struct {
+	items []Expr
+}
+
+func (v qualified) AppendToSQLBuilder(b *Builder) {
+	for i, item := range v.items {
+		if i > 0 {
+			b.AppendRaw(".")
+		}
+		item.AppendToSQLBuilder(b)
+	}
+}

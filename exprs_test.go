@@ -48,6 +48,8 @@ func TestExprs(t *testing.T) {
 
 		{"As", As(Column("foo"), "bar"), "foo AS bar"},
 
+		{"Qualified", Qualified(Table("foo"), Column("id")), "foo.id"},
+
 		{"Parens(func)", Parens(NOW), "(NOW())"},
 		{"Parens(value)", Parens(Value(123)), "($1) [123]"},
 		{"Parens(subquery)", Parens(Select{From: Table("foo"), Fields: List{Column("x")}}), "(SELECT x FROM foo)"},
