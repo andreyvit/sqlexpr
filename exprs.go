@@ -204,3 +204,17 @@ func Count(v Expr) Expr {
 func As(v Expr, name Column) Expr {
 	return Fragment{v, Raw("AS"), name}
 }
+
+func Parens(v Expr) Expr {
+	return parenthesized{v}
+}
+
+type parenthesized struct {
+	v Expr
+}
+
+func (v parenthesized) AppendToSQLBuilder(b *Builder) {
+	b.AppendRaw("(")
+	v.v.AppendToSQLBuilder(b)
+	b.AppendRaw(")")
+}

@@ -47,6 +47,10 @@ func TestExprs(t *testing.T) {
 		{"Count", Count(Column("boz")), "COUNT (boz)"},
 
 		{"As", As(Column("foo"), "bar"), "foo AS bar"},
+
+		{"Parens(func)", Parens(NOW), "(NOW())"},
+		{"Parens(value)", Parens(Value(123)), "($1) [123]"},
+		{"Parens(subquery)", Parens(Select{From: Table("foo"), Fields: List{Column("x")}}), "(SELECT x FROM foo)"},
 	}
 
 	for _, test := range tests {
